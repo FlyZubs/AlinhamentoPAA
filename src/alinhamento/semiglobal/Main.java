@@ -15,6 +15,8 @@ public class Main {
 		
 		ag.algoritmo(A, B);
 		ag.imprimeMatriz();
+		ag.otimo();
+		ag.imprimeSequencias(A, B);
 	}
 
 }

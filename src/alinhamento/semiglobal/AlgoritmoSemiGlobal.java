@@ -7,6 +7,7 @@ public class AlgoritmoSemiGlobal {
 	private int m, n; // tamanho das sequencias
 	private int[][] matriz; // matriz
 	private int maximo; // pontuacao maxima de alinhamento otimo
+	private int[] seq; // vetor que armazena o caminho do alinhamento otimo
 
 	// construtor que recebe os custos das operacoes
 	public AlgoritmoSemiGlobal(int gap, int match, int mismatch) {
@@ -72,5 +73,87 @@ public class AlgoritmoSemiGlobal {
 		}
 		System.out.println("\n" + "ALINHAMENTO OTIMO = " + maximo);
 	}
+	
+	// metodo que percorre a matriz da ultima posicao ate a primeira posicao atraves do alinhamento otimo
+		public void otimo() {
+			int i = n;
+			int j = m;
+			int c = 0;
+			seq = new int[n + m + 2];
+			while (i != 0 || j != 0) {
+				if (i != 0 && j != 0) {
+					if (matriz[i][j] == matriz[i - 1][j - 1] + match || matriz[i][j] == matriz[i - 1][j - 1] + mismatch) {
+						seq[c] = 1;
+						c++;
+						i--;
+						j--;
+					} else {
+						if (matriz[i][j] == matriz[i - 1][j] + gap) {
+							seq[c] = 2;
+							c++;
+							i--;
+						} else {
+							seq[c] = 3;
+							c++;
+							j--;
+						}
+					}
+				} else {
+					if (i != 0) {
+						seq[c] = 2;
+						c++;
+						i--;
+					} else {
+						seq[c] = 3;
+						c++;
+						j--;
+					}
+				}
+			}
+			
+			int[] arm = new int[c];
+			int k = c-1;
+			for (i = 0; i < c; i++) {
+				arm[k] = seq[i];
+				k--;
+			}
+			seq = arm;
+		}
 
-}
+		// metodo que imprime as sequencias alinhadas atraves do alinhamento otimo
+		public void imprimeSequencias(char[] A, char[] B) {
+			int i;
+			int k = 0;
+			
+			System.out.println();
+			for (i = 0; i < seq.length; i++) {
+				if (seq[i] == 1) {
+					System.out.print(A[k]);
+					k++;
+				} else {
+					if (seq[i] == 2) {
+						System.out.print(A[k]);
+						k++;
+					} else {
+						System.out.print("-");
+					}
+				}
+			}
+			k = 0;
+			System.out.println();
+			for (i = 0; i < seq.length; i++) {
+				if (seq[i] == 1) {
+					System.out.print(B[k]);
+					k++;
+				} else {
+					if (seq[i] == 2) {
+						System.out.print("-");
+					} else {
+						System.out.print(B[k]);
+						k++;
+					}
+				}
+			}
+		}
+
+	}
